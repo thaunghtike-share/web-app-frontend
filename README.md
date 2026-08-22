@@ -1,8 +1,8 @@
-# student-registration-form
+## student-registration-form
 
 Student registration UI
 
-## Local Run
+### Local Run
 
 ```bash
 docker build \
