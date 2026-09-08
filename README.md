@@ -17,3 +17,15 @@ Open:
 ```text
 http://localhost:3000
 ```
+
+### Castone GitOps
+
+For the Helm deployment, CI builds with:
+
+```text
+VITE_API_URL=http://web-app-backend.castone.svc.cluster.local:8000
+```
+
+After publishing, set the new image tag in
+`amm-castone/helm_charts/web-app-frontend/values.yaml`.
+The local Docker example above still uses an explicit backend URL.

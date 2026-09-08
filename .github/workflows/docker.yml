@@ -15,7 +15,7 @@ env:
   ECR_REPOSITORY: web-app-frontend
   AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
   IMAGE_TAG: ${{ github.sha }}
-  VITE_API_URL: http://web-app-backend
+  VITE_API_URL: "http://web-app-backend.castone.svc.cluster.local:8000"
 
 jobs:
   docker-ci:
