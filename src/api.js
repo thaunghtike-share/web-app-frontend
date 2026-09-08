@@ -1,4 +1,5 @@
-const API_URL = (import.meta.env.VITE_API_URL || "").replace(/\/$/, "");
+const configuredApiUrl = (import.meta.env.VITE_API_URL || "").replace(/\/$/, "");
+const API_URL = configuredApiUrl.includes(".svc.cluster.local") ? "" : configuredApiUrl;
 
 async function request(path, options = {}) {
   const response = await fetch(`${API_URL}${path}`, options);
@@ -17,7 +18,8 @@ async function request(path, options = {}) {
 }
 
 export const apiConfig = {
-  apiUrl: API_URL
+  apiUrl: API_URL,
+  configuredApiUrl
 };
 
 export const api = {

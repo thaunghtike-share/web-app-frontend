@@ -133,6 +133,13 @@ h1 span {
   margin-bottom: 6px;
 }
 
+.apiBox small {
+  display: block;
+  margin-top: 6px;
+  color: #64748b;
+  word-break: break-all;
+}
+
 code {
   color: #1d4ed8;
   font-weight: 800;

@@ -93,7 +93,10 @@ function App() {
 
             <div className="apiBox">
               <div className="apiLabel">Current API URL</div>
-              <code>{apiConfig.apiUrl}</code>
+              <code>{apiConfig.apiUrl || "/api"}</code>
+              {apiConfig.configuredApiUrl && apiConfig.configuredApiUrl !== apiConfig.apiUrl ? (
+                <small>{apiConfig.configuredApiUrl}</small>
+              ) : null}
             </div>
 
             <div className="architecture">
