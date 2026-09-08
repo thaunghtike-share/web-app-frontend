@@ -23,14 +23,20 @@ function App() {
     try {
       const healthData = await api.health();
       setHealth(`API ${healthData.status.toUpperCase()} | DB ${healthData.database}`);
+    } catch {
+      setHealth("API Offline");
+      setUsers([]);
+      return;
+    }
 
+    try {
       const statsData = await api.stats();
       setStats(statsData);
 
       const usersData = await api.users();
       setUsers(usersData.users || []);
-    } catch {
-      setHealth("API Offline");
+    } catch (error) {
+      setMessage({ type: "error", text: error.message || "Database is not ready" });
       setUsers([]);
     }
   }

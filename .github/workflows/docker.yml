@@ -16,6 +16,8 @@ env:
   AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
   IMAGE_TAG: ${{ github.sha }}
   VITE_API_URL: "http://web-app-backend.castone.svc.cluster.local:8000"
+  K8S_FOLDER: web-app-frontend
+  TARGET_BRANCH: main
 
 jobs:
   docker-ci:
@@ -72,3 +74,35 @@ jobs:
             -t ${{ steps.image.outputs.image_uri }} \
             --build-arg VITE_API_URL="$VITE_API_URL" \
             .
+
+      - name: Checkout GitOps Repository
+        uses: actions/checkout@v6
+        with:
+          repository: thaunghtike-share/amm-castone
+          token: ${{ secrets.GH_PAT }}
+          ref: ${{ env.TARGET_BRANCH }}
+          path: gitops-repo
+
+      - name: Create Argo CD Sidecar Override File
+        working-directory: gitops-repo/helm_charts/${{ env.K8S_FOLDER }}
+        run: |
+          SHORT_SHA="${IMAGE_TAG::7}"
+
+          cat <<EOF > .argocd-source-${{ env.K8S_FOLDER }}.yaml
+          helm:
+            parameters:
+              - name: image.tag
+                value: "$SHORT_SHA"
+                forcestring: true
+          EOF
+
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+          git add ".argocd-source-${{ env.K8S_FOLDER }}.yaml"
+
+          if git diff --staged --quiet; then
+            echo "No tag change detected."
+          else
+            git commit -m "deploy: update ${{ env.K8S_FOLDER }} to $SHORT_SHA"
+            git push origin "${{ env.TARGET_BRANCH }}"
+          fi
